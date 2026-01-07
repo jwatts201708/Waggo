@@ -22,10 +22,14 @@ app.get("/", (req, res) => {
 });
 
 // MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB error:", err));
+if (process.env.MONGO_URI) {
+  mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB connected"))
+    .catch((err) => console.error("MongoDB error:", err));
+} else {
+  console.warn("MONGO_URI not set. Running without database connection.");
+}
 
 // Start server
 const PORT = process.env.PORT || 3000;
