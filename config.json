@@ -1,0 +1,42 @@
+{
+    "system": {
+        "log_level": "INFO",
+        "environment": "PRODUCTION",
+        "heartbeat_interval_seconds": 10,
+        "prometheus_metrics_port": 9090,
+        "hot_reload_enabled": true,
+        "data_dir": "./data"
+    },
+    "risk": {
+        "global_max_drawdown": 0.02,
+        "max_positions_per_exchange": 5,
+        "max_leverage_allowed": 10.0,
+        "stop_loss_default_pct": 0.05,
+        "kill_switch_enabled": false,
+        "allowed_assets": [
+            "BTC",
+            "ETH",
+            "SOL",
+            "USDT"
+        ],
+        "blacklisted_assets": [
+            "LUNA",
+            "FTT"
+        ]
+    },
+    "network": {
+        "max_retries": 3,
+        "timeout_seconds": 5.0,
+        "proxy_url": null,
+        "verify_ssl": true,
+        "user_agent": "Waggo/1.0 (High-Frequency-Trader)",
+        "keep_alive": true
+    },
+    "exchanges": {},
+    "strategies": {},
+    "arbitrage": {
+        "min_profit_pct": 0.005,
+        "gas_limit_gwei": 50,
+        "simulation_mode": true
+    }
+}
