@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: waggo-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
+  - type: web
+    name: symbiot-backend
+    env: python
+    rootDir: project-symbiot
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
