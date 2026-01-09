@@ -1,0 +1,124 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Project Symbiot Dashboard</title>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 24px; }
+    .row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; min-width: 320px; flex: 1; }
+    button { padding: 10px 12px; border-radius: 10px; border: 1px solid #bbb; background: #f7f7f7; cursor: pointer; }
+    pre { background: #0b0b0b; color: #eaeaea; padding: 12px; border-radius: 12px; overflow:auto; max-height: 360px; }
+    input, textarea { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ccc; }
+    textarea { min-height: 140px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .muted { color: #666; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Project Symbiot</h1>
+  <div class="muted">Backend default: <code>http://127.0.0.1:8000</code> (edit if different)</div>
+
+
+  <div class="card" style="margin-top:16px;">
+    <label>Backend URL</label>
+    <input id="baseUrl" value="http://127.0.0.1:8000" />
+  </div>
+
+
+  <div class="row" style="margin-top:16px;">
+    <div class="card">
+      <h2>Health</h2>
+      <button onclick="doHealth()">GET /health</button>
+      <pre id="healthOut">{}</pre>
+    </div>
+
+
+<div class="card">
+  <h2>NeuroSync</h2>
+  <button onclick="doNeuro()">POST /neuro/step</button>
+  <div class="muted">Stimulus: sense += 1.0</div>
+  <pre id="neuroOut">{}</pre>
+</div>
+
+<div class="card">
+  <h2>QuantumLink</h2>
+  <button onclick="doQuantum()">POST /quantum/derive-key</button>
+  <div class="muted">alice=bob seeds yield deterministic-ish sim keys</div>
+  <pre id="quantumOut">{}</pre>
+</div>
+
+  </div>
+
+
+  <div class="card" style="margin-top:16px;">
+    <h2>Fee Sweeper Optimizer</h2>
+    <div class="muted">Edit payload then run <code>POST /sweeper/rebalance</code>.</div>
+    <textarea id="sweeperPayload"></textarea>
+    <button style="margin-top:10px;" onclick="doSweep()">Run Rebalance</button>
+    <pre id="sweeperOut">{}</pre>
+  </div>
+
+
+<script>
+  function base() { return document.getElementById("baseUrl").value.replace(/\/+$/, ""); }
+  async function jget(path) {
+    const r = await fetch(base() + path);
+    return [r.status, await r.json()];
+  }
+  async function jpost(path, body) {
+    const r = await fetch(base() + path, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(body)
+    });
+    return [r.status, await r.json()];
+  }
+  function setOut(id, obj) {
+    document.getElementById(id).textContent = JSON.stringify(obj, null, 2);
+  }
+
+  async function doHealth() {
+    const [s, data] = await jget("/health");
+    setOut("healthOut", {status:s, data});
+  }
+
+  async function doNeuro() {
+    const payload = {
+      config: {learning_rate: 0.05, decay: 0.001, propagation_steps: 3},
+      stimuli: [{"node_id":"sense", "value": 1.0}]
+    };
+    const [s, data] = await jpost("/neuro/step", payload);
+    setOut("neuroOut", {status:s, data});
+  }
+
+  async function doQuantum() {
+    const payload = {alice:"alice", bob:"bob", basis_seed: 1337};
+    const [s, data] = await jpost("/quantum/derive-key", payload);
+    setOut("quantumOut", {status:s, data});
+  }
+
+  async function doSweep() {
+    let payload;
+    try { payload = JSON.parse(document.getElementById("sweeperPayload").value); }
+    catch (e) { return setOut("sweeperOut", {error:"Invalid JSON", detail:String(e)}); }
+    const [s, data] = await jpost("/sweeper/rebalance", payload);
+    setOut("sweeperOut", {status:s, data});
+  }
+
+  // default sweeper payload
+  document.getElementById("sweeperPayload").value = JSON.stringify({
+    assets: [
+      { chain:"ETH", symbol:"ETH", balance:0.05, usd_price:2200.0, gas_estimate_native:0.001, base_fee_gwei:22.0, priority_fee_gwei:2.0 }
+    ],
+    min_sweep_threshold_usd: 50.0,
+    gas_price_buffer_percent: 15.0,
+    pqc_enforcement: true,
+    governance_policy_hash: "GOV-POLICY-DEFAULT"
+  }, null, 2);
+</script>
+
+
+</body>
+</html>
