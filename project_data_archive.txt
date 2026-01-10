@@ -1,0 +1,71 @@
+==============================================================================
+DATA ARCHIVE & PROJECT NOTES
+==============================================================================
+
+--- Incident Response Analysis (Case ID: 8896081524) ---
+Subject: Account Security Analysis for etororelated@gmail.com and lrose0621@gmail.com
+Status: Immediate Containment and Account Securitization
+
+1. Actions Taken:
+   - Global Session Revocation for both accounts.
+   - Invalidation of all OAuth 2.0 refresh tokens and API keys.
+   - De-registration of all Passkeys and Physical Security Keys.
+   - Implementation of Temporary High-Security Account Hold.
+
+2. Incident Log Analysis:
+   - Suspicious Activity detected from IP 71.212.84.XX (Maryville, TN).
+   - Device: Mozilla/5.0 (X11; CrOS x86_64 14541.0.0).
+   - Events:
+     - 2024-07-10 02:20:11 UTC: PASSKEY_PROMPT (Challenge Issued) for etororelated@gmail.com.
+     - 2024-07-10 02:21:48 UTC: RECOVERY_FLOW_INIT (Prompt Issued) for lrose0621@gmail.com.
+
+3. Threat Assessment:
+   - Compromised Chrome OS device likely used to exfiltrate session data.
+   - Attacker attempted to pivot from primary account (protected by passkey) to recovery account.
+
+--- BTCPay Greenfield API Spec Summary ---
+- API Keys: Manage keys.
+- Invoices: CRUD operations.
+- Stores: Manage stores, users, payment methods.
+- Lightning Network: Internal and store-specific nodes.
+
+--- Legacy Configuration Data ---
+From app.yaml:
+- terminatorId: 1001
+- transmitor.ipAddr: '101.200.186.139'
+
+From entitlements.xml:
+- dynamic-codesigning: True
+- platform-application: True
+
+--- Ecosystem Data ---
+Faucets:
+- Base Sepolia Faucet by Alchemy
+- Superchain Faucet
+- QuickNode Faucet
+
+Node Providers:
+- Coinbase Developer Platform
+- Alchemy
+- Ankr
+
+Oracles:
+- API3
+- Chainlink
+- Chronicle
+
+--- URL & NFT Findings ---
+URL: https://bc.co/deposit
+- Findings: Not a crypto deposit service. Associated with British Columbia services.
+
+NFT: "Visit BlazeEther.net to claim rewards"
+- Contract: 0x02b5eB753d639Fff511c29a10C094049247cfde0
+- Token ID: 0
+- Risk: High (Phishing indicator).
+- Creator: SatoshiLabs (likely impersonation).
+
+--- Wallet Analysis Notes ---
+Address: 0x175BE7DOb8E3Eb9C379849770C...
+- Tags: Johnny watts, Ka.
+- Balance: ~0.535 ETH ($1,580.38).
+- Suspicious Transfer: -4,865.23 USDT to "Me" / "Jotny watis x" on 2022-03-21.
