@@ -14,3 +14,4 @@ numpy
 qrcode
 python-dotenv
 werkzeug
+gunicorn

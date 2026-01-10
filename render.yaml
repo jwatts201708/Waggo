@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: project-shimmer
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn shimmer:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        sync: false
