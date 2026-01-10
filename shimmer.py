@@ -333,6 +333,25 @@ admin.add_view(SecureModelView(User, db.session))
 admin.add_view(SecureModelView(GiftBox, db.session))
 admin.add_view(SecureModelView(EquityPortfolio, db.session))
 
+# Initialize DB on module import for Gunicorn
+with app.app_context():
+    db.create_all()
+    # Seed Admin if needed
+    if not db.session.get(User, 1): # Simple check if ANY user exists or specifically admin
+        if not User.query.filter_by(username="admin").first():
+            u = User(username="admin", is_admin=True)
+            u.set_password("admin123")
+            # Seed Portfolio
+            pf = EquityPortfolio(
+                user=u,
+                holdings={"BTC": 0.5, "ETH": 2.0},
+                total_value_usd=5500.00
+            )
+            db.session.add(u)
+            db.session.add(pf)
+            db.session.commit()
+            logger.info("Admin user seeded.")
+
 # ==============================================================================
 # 6. ROUTES
 # ==============================================================================
@@ -623,15 +642,5 @@ def api_wallets():
 # ==============================================================================
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-        # Seed Admin if needed
-        if not User.query.filter_by(username="admin").first():
-            u = User(username="admin", is_admin=True)
-            u.set_password("admin123")
-            db.session.add(u)
-            db.session.commit()
-            logger.info("Admin user seeded.")
-
-    print("--- Project Shimmer Online ---")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    print("--- Project Shimmer Online (Dev) ---")
+    app.run(host="0.0.0.0", port=5000, debug=True)

@@ -3,7 +3,7 @@ services:
     name: project-shimmer
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn shimmer:app
+    startCommand: gunicorn shimmer:app --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
