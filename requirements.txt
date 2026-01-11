@@ -1,0 +1,17 @@
+flask
+flask-sqlalchemy
+flask-login
+flask-admin
+flask-cors
+flask-limiter
+Flask-WTF
+requests
+hdwallet
+web3
+cryptography
+Pillow
+numpy
+qrcode
+python-dotenv
+werkzeug
+gunicorn
